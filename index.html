@@ -10,8 +10,20 @@
   </head>
   <body>
 
+    <!-- ===== PRELOADER ===== -->
+    <div class="preloader" id="preloader">
+      <div class="preloader-inner">
+        <div class="preloader-logo">JF</div>
+        <div class="preloader-bar"><div class="preloader-fill" id="preloader-fill"></div></div>
+        <p class="preloader-text">Loading markets...</p>
+      </div>
+    </div>
+
+    <!-- ===== SCROLL PROGRESS ===== -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
     <!-- ===== HEADER ===== -->
-    <header class="header">
+    <header class="header" id="header">
       <div class="header-container">
         <div class="logo-container">
           <img
@@ -46,17 +58,27 @@
         </button>
       </div>
 
-      <!-- Mobile Nav Dropdown -->
+      <!-- Mobile Nav -->
       <div class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#brokers">Brokers</a></li>
-          <li><a href="#booking">Book Now</a></li>
+          <li><a href="#booking" class="mobile-cta">Book Now</a></li>
         </ul>
       </div>
     </header>
+
+    <!-- ===== LIVE TICKER BAR ===== -->
+    <div class="ticker-bar" aria-label="Live forex market data">
+      <span class="ticker-label"><i class="fas fa-circle"></i> LIVE</span>
+      <div class="ticker-wrapper">
+        <div class="ticker-track" id="ticker-track">
+          <!-- Populated by script.js -->
+        </div>
+      </div>
+    </div>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero-section">
@@ -69,9 +91,7 @@
           Trade with Confidence.
         </h1>
         <p class="hero-subtitle animate-fade-up">
-          Unlock your potential in the world's largest financial market with
-          JhayFx Academy. We provide the knowledge, tools, and support you need
-          to succeed.
+          Learn to trade <span class="typewriter-wrap"><span id="typewriter"></span><span class="cursor">|</span></span> through expert-led education, live sessions, and hands-on mentorship.
         </p>
         <div class="hero-actions animate-fade-up">
           <a href="#booking" class="hero-cta">Book Your Free Consultation</a>
@@ -114,22 +134,39 @@
               At JhayFx Academy, we believe that education is the key to success
               in forex trading. Our mission is to transform aspiring traders into
               profitable professionals through a structured curriculum and
-              personalized mentorship. We go beyond theory to provide practical,
-              hands-on experience.
+              personalized mentorship.
             </p>
             <p>
               Our courses are designed for all levels — from complete beginners
               who have never seen a chart to seasoned traders looking to refine
-              their strategies. Our expert instructors, with years of market
-              experience, guide you every step of the way.
+              their strategies. Our expert instructors guide you every step of the way.
             </p>
+            <div class="about-features">
+              <div class="about-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Structured Curriculum</span>
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Proven Strategies</span>
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Real Market Experience</span>
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Lifetime Community Access</span>
+              </div>
+            </div>
           </div>
           <div class="about-image-container reveal">
             <img
               src="trading.jpg"
               alt="Trading room illustration"
               class="about-image"
-              onerror="this.onerror=null; this.src='https://placehold.co/600x400/1e1e35/66b2ff?text=JhayFx+Academy';"
+              loading="lazy"
+              onerror="this.onerror=null; this.src='https://placehold.co/600x420/1e1e35/66b2ff?text=JhayFx+Academy';"
             />
           </div>
         </div>
@@ -140,12 +177,11 @@
     <section id="services" class="services-section">
       <div class="section-container">
         <h2 class="section-title reveal">What We Offer</h2>
+        <p class="section-subtitle reveal">Everything you need to become a profitable trader.</p>
         <div class="services-grid">
 
           <div class="service-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-graduation-cap"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
             <h3 class="card-title">Expert-Led Courses</h3>
             <p class="card-text">
               Learn from seasoned professionals with real-world trading
@@ -154,9 +190,7 @@
           </div>
 
           <div class="service-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-chart-line"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-chart-line"></i></div>
             <h3 class="card-title">Live Trading Sessions</h3>
             <p class="card-text">
               Join our daily live sessions to analyze the market and execute
@@ -165,9 +199,7 @@
           </div>
 
           <div class="service-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-user-tie"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-user-tie"></i></div>
             <h3 class="card-title">Personalized Mentorship</h3>
             <p class="card-text">
               Get one-on-one guidance to build a trading plan that suits your
@@ -176,13 +208,11 @@
           </div>
 
           <div class="service-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-users"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-users"></i></div>
             <h3 class="card-title">Exclusive Community</h3>
             <p class="card-text">
-              Join our supportive community of like-minded traders to share
-              ideas, strategies, and grow together.
+              Join our supportive community of traders to share ideas,
+              strategies, and grow together every day.
             </p>
           </div>
 
@@ -197,7 +227,7 @@
         <p class="section-subtitle reveal">Choose the plan that fits your trading journey.</p>
         <div class="pricing-grid">
 
-          <!-- Basic Plan -->
+          <!-- Basic -->
           <div class="pricing-card reveal">
             <div class="pricing-header">
               <p class="plan-name">Basic</p>
@@ -205,34 +235,34 @@
               <p class="plan-desc">Ideal for Beginners</p>
             </div>
             <ul class="pricing-features">
-              <li><i class="fas fa-check"></i> Beginner To Advanced Course</li>
-              <li><i class="fas fa-check"></i> 2&ndash;3 Free Signals Per Week</li>
-              <li><i class="fas fa-check"></i> Trading Resources Access</li>
-              <li><i class="fas fa-check"></i> General Community Access</li>
-              <li><i class="fas fa-check"></i> Chat Support 24/7</li>
+              <li><i class="fas fa-check"></i>Beginner To Advanced Course</li>
+              <li><i class="fas fa-check"></i>2&ndash;3 Free Signals Per Week</li>
+              <li><i class="fas fa-check"></i>Trading Resources Access</li>
+              <li><i class="fas fa-check"></i>General Community Access</li>
+              <li><i class="fas fa-check"></i>Chat Support 24/7</li>
             </ul>
             <a href="#booking" class="pricing-btn">Get Started</a>
           </div>
 
-          <!-- Professional Plan (Featured) -->
+          <!-- Professional (Featured) -->
           <div class="pricing-card featured reveal">
             <span class="featured-badge">Most Popular</span>
             <div class="pricing-header">
               <p class="plan-name">Professional</p>
               <div class="plan-price"><small>$</small>100<small>/month</small></div>
-              <p class="plan-desc">Ideal for Intermediate Traders</p>
+              <p class="plan-desc">For Intermediate Traders</p>
             </div>
             <ul class="pricing-features">
-              <li><i class="fas fa-check"></i> Masterclass Strategy Course</li>
-              <li><i class="fas fa-check"></i> Signal Group Access</li>
-              <li><i class="fas fa-check"></i> Recorded Sessions Library</li>
-              <li><i class="fas fa-check"></i> Priority Support</li>
-              <li><i class="fas fa-check"></i> Prop Firm Trading Guidance</li>
+              <li><i class="fas fa-check"></i>Masterclass Strategy Course</li>
+              <li><i class="fas fa-check"></i>Signal Group Access</li>
+              <li><i class="fas fa-check"></i>Recorded Sessions Library</li>
+              <li><i class="fas fa-check"></i>Priority Support</li>
+              <li><i class="fas fa-check"></i>Prop Firm Trading Guidance</li>
             </ul>
             <a href="#booking" class="pricing-btn featured-btn">Get Started</a>
           </div>
 
-          <!-- Advanced Plan -->
+          <!-- Advanced -->
           <div class="pricing-card reveal">
             <div class="pricing-header">
               <p class="plan-name">Advanced</p>
@@ -240,12 +270,12 @@
               <p class="plan-desc">For Elite Traders</p>
             </div>
             <ul class="pricing-features">
-              <li><i class="fas fa-check"></i> Trading Bot Access</li>
-              <li><i class="fas fa-check"></i> Premium Signal Group Access</li>
-              <li><i class="fas fa-check"></i> Account Management Available</li>
-              <li><i class="fas fa-check"></i> Copy Trading Access</li>
-              <li><i class="fas fa-check"></i> Live Trading Together</li>
-              <li><i class="fas fa-check"></i> Prop Firm Account Trading</li>
+              <li><i class="fas fa-check"></i>Trading Bot Access</li>
+              <li><i class="fas fa-check"></i>Premium Signal Group Access</li>
+              <li><i class="fas fa-check"></i>Account Management Available</li>
+              <li><i class="fas fa-check"></i>Copy Trading Access</li>
+              <li><i class="fas fa-check"></i>Live Trading Together</li>
+              <li><i class="fas fa-check"></i>Prop Firm Account Trading</li>
             </ul>
             <a href="#booking" class="pricing-btn">Get Started</a>
           </div>
@@ -257,50 +287,162 @@
     <!-- ===== BROKERS SECTION ===== -->
     <section id="brokers" class="brokers-section">
       <div class="section-container">
-        <h2 class="section-title reveal">Recommended Brokers &amp; Prop Firms</h2>
-        <p class="section-subtitle reveal">Trade with the best platforms trusted by JhayFx traders.</p>
+        <h2 class="section-title reveal">Recommended Partners</h2>
+        <p class="section-subtitle reveal">Trusted platforms used by JhayFx traders.</p>
         <div class="brokers-grid">
 
           <div class="broker-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-building-columns"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-building-columns"></i></div>
             <h3 class="card-title">Exness</h3>
             <p class="broker-type">Recommended Broker</p>
             <p class="card-text">
-              Use this reliable, regulated broker for a seamless trading
-              experience with tight spreads, fast execution, and instant
-              withdrawals.
+              Reliable, regulated broker offering tight spreads, fast execution,
+              and instant withdrawals for a seamless trading experience.
             </p>
-            <a
-              href="https://one.exnessonelink.com/a/ejt6ohah7g"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="broker-btn"
-            >
+            <a href="https://one.exnessonelink.com/a/ejt6ohah7g" target="_blank"
+              rel="noopener noreferrer" class="broker-btn">
               Open Exness Account <i class="fas fa-arrow-right"></i>
             </a>
           </div>
 
           <div class="broker-card reveal">
-            <div class="card-icon">
-              <i class="fas fa-trophy"></i>
-            </div>
+            <div class="card-icon"><i class="fas fa-trophy"></i></div>
             <h3 class="card-title">FundedNext</h3>
             <p class="broker-type">Recommended Prop Firm</p>
             <p class="card-text">
-              Get funded and trade with a top-tier prop firm offering easy
-              payouts and flexible challenge rules. Use referral code
-              <code class="ref-code">REFA9H63B</code> when signing up.
+              Top-tier prop firm with easy payouts and flexible challenge rules.
+              Use referral code <code class="ref-code">REFA9H63B</code> at sign-up.
             </p>
-            <a
-              href="https://app.fundednext.com/accounts"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="broker-btn"
-            >
+            <a href="https://app.fundednext.com/accounts" target="_blank"
+              rel="noopener noreferrer" class="broker-btn">
               Join FundedNext <i class="fas fa-arrow-right"></i>
             </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS SECTION ===== -->
+    <section class="testimonials-section">
+      <div class="section-container">
+        <h2 class="section-title reveal">What Our Traders Say</h2>
+        <p class="section-subtitle reveal">Real results from real students.</p>
+        <div class="testimonials-grid">
+
+          <div class="testimonial-card reveal">
+            <div class="stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              "After joining JhayFx, I went from losing trades to consistently
+              profitable in just 3 months. The structured curriculum made everything click."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">AO</div>
+              <div>
+                <p class="author-name">Adewale O.</p>
+                <p class="author-role">Basic Plan Graduate</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              "The live sessions are incredible. Watching experts trade in real-time
+              taught me more than any book or YouTube video ever could."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">SK</div>
+              <div>
+                <p class="author-name">Sarah K.</p>
+                <p class="author-role">Professional Plan Member</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              "I passed my FundedNext challenge on the first attempt using strategies
+              from the Advanced plan. Best investment I've ever made."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">EC</div>
+              <div>
+                <p class="author-name">Emmanuel C.</p>
+                <p class="author-role">Advanced Plan — Funded Trader</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ SECTION ===== -->
+    <section class="faq-section">
+      <div class="section-container faq-container">
+        <h2 class="section-title reveal">Frequently Asked Questions</h2>
+        <p class="section-subtitle reveal">Everything you need to know before getting started.</p>
+        <div class="faq-list reveal">
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Do I need trading experience to join?</span>
+              <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>No experience required. Our Basic plan starts from the very fundamentals — from reading a chart to executing your first live trade.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What trading platform do you teach on?</span>
+              <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>We primarily teach on MetaTrader 4 (MT4) and MetaTrader 5 (MT5) — the industry standard platforms. Our recommended broker Exness supports both on desktop and mobile.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>How long before I see results?</span>
+              <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Most dedicated students see measurable improvement within 4–12 weeks. Consistency in practice and attending live sessions is the key — trading is a skill that compounds with time.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Is the mentorship truly one-on-one?</span>
+              <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. Professional and Advanced plan members get dedicated one-on-one sessions tailored to your specific trading style, goals, and areas of improvement.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Can I upgrade my plan at any time?</span>
+              <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely. You can upgrade from Basic to Professional or Advanced at any time. Just book a consultation and our team will guide you through the process seamlessly.</p>
+            </div>
           </div>
 
         </div>
@@ -316,12 +458,8 @@
             Ready to start your trading journey? Click below to book a free,
             no-obligation consultation with one of our experts via Calendly.
           </p>
-          <a
-            href="https://calendly.com/joeloguntade256/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hero-cta"
-          >
+          <a href="https://calendly.com/joeloguntade256/30min" target="_blank"
+            rel="noopener noreferrer" class="hero-cta">
             <i class="far fa-calendar-alt"></i>&nbsp; Book on Calendly
           </a>
         </div>
@@ -329,22 +467,34 @@
     </section>
 
     <!-- ===== WHATSAPP FLOAT ===== -->
-    <a
-      href="https://wa.me/+2347069688280"
-      class="whatsapp-float"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat on WhatsApp"
-    >
+    <a href="https://wa.me/+2347069688280" class="whatsapp-float" target="_blank"
+      rel="noopener noreferrer" aria-label="Chat on WhatsApp">
       <i class="fab fa-whatsapp"></i>
-      <span class="tooltip">Chat with us on WhatsApp!</span>
+      <span class="tooltip">Chat with us!</span>
     </a>
+
+    <!-- ===== BACK TO TOP ===== -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+      <i class="fas fa-chevron-up"></i>
+    </button>
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
       <div class="container-center">
-        <p>&copy; <span id="footer-year"></span> JhayFx Academy. All Rights Reserved.</p>
+        <div class="footer-logo">
+          <img src="logo.JPG" alt="JhayFx" class="footer-logo-img"
+            onerror="this.onerror=null; this.src='https://placehold.co/36x36/007bff/ffffff?text=JF';" />
+          <span>JhayFx Academy</span>
+        </div>
         <p class="footer-tagline">Master the Markets. Trade with Confidence.</p>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#brokers">Brokers</a>
+          <a href="#booking">Book Now</a>
+        </nav>
+        <p class="footer-copy">&copy; <span id="footer-year"></span> JhayFx Academy. All Rights Reserved.</p>
       </div>
     </footer>
 
