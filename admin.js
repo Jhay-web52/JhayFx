@@ -400,11 +400,10 @@ document.getElementById("signal-form").addEventListener("submit", async (e) => {
   const sl    = document.getElementById("sig-sl").value.trim();
   const tp1   = document.getElementById("sig-tp1").value.trim();
   const tp2   = document.getElementById("sig-tp2").value.trim();
-  const tp3   = document.getElementById("sig-tp3").value.trim();
   const note  = document.getElementById("sig-note").value.trim();
 
   // Combine non-empty TPs into one comma-separated string
-  const tp = [tp1, tp2, tp3].filter(Boolean).join(", ");
+  const tp = [tp1, tp2].filter(Boolean).join(", ");
 
   if (!pair || !entry || !sl || !tp1) {
     setSigStatus("Please fill in all required fields.", "error");
@@ -430,7 +429,7 @@ document.getElementById("signal-form").addEventListener("submit", async (e) => {
   } else {
     setSigStatus("Signal posted!", "success");
     document.getElementById("signal-form").reset();
-    ["sig-tp1","sig-tp2","sig-tp3"].forEach((id) => { document.getElementById(id).value = ""; });
+    ["sig-tp1","sig-tp2"].forEach((id) => { document.getElementById(id).value = ""; });
     selectedDirection = "BUY";
     document.getElementById("dir-buy").classList.add("active");
     document.getElementById("dir-sell").classList.remove("active");
