@@ -205,75 +205,107 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ============================================================
-     LIVE FOREX TICKER
+     LIVE FOREX TICKER — Real rates via free currency API
      ============================================================ */
   const tickerTrack = document.getElementById("ticker-track");
 
-  const pairs = [
-    { pair: "EUR/USD", price: 1.08560, decimals: 5 },
-    { pair: "GBP/USD", price: 1.27340, decimals: 5 },
-    { pair: "USD/JPY", price: 149.850, decimals: 3 },
-    { pair: "AUD/USD", price: 0.65230, decimals: 5 },
-    { pair: "USD/CAD", price: 1.36870, decimals: 5 },
-    { pair: "EUR/GBP", price: 0.85240, decimals: 5 },
-    { pair: "USD/CHF", price: 0.89650, decimals: 5 },
-    { pair: "XAU/USD", price: 2024.30, decimals: 2 },
-    { pair: "BTC/USD", price: 67450.00, decimals: 2 },
-    { pair: "NZD/USD", price: 0.60120, decimals: 5 },
+  // Pair definitions: mode "inv" = 1/rate, "dir" = rate itself, "cross" = computed
+  const PAIRS = [
+    { pair: "EUR/USD", key: "eur", mode: "inv",   decimals: 5 },
+    { pair: "GBP/USD", key: "gbp", mode: "inv",   decimals: 5 },
+    { pair: "USD/JPY", key: "jpy", mode: "dir",   decimals: 3 },
+    { pair: "AUD/USD", key: "aud", mode: "inv",   decimals: 5 },
+    { pair: "USD/CAD", key: "cad", mode: "dir",   decimals: 5 },
+    { pair: "EUR/GBP", key: null,  mode: "cross", decimals: 5, c: ["gbp", "eur"] },
+    { pair: "USD/CHF", key: "chf", mode: "dir",   decimals: 5 },
+    { pair: "XAU/USD", key: "xau", mode: "inv",   decimals: 2 },
+    { pair: "BTC/USD", key: "btc", mode: "inv",   decimals: 0 },
+    { pair: "NZD/USD", key: "nzd", mode: "inv",   decimals: 5 },
   ];
 
-  // Randomly fluctuate a price slightly
-  function jitter(price, decimals) {
-    const delta = price * (Math.random() * 0.0006 - 0.0003);
-    return parseFloat((price + delta).toFixed(decimals));
+  const livePrice = {};  // current displayed price per pair
+  const prevPrice = {};  // previous price for change arrow
+
+  function calcFromRates(r, p) {
+    if (p.mode === "inv")   return 1 / r[p.key];
+    if (p.mode === "dir")   return r[p.key];
+    if (p.mode === "cross") return r[p.c[0]] / r[p.c[1]];
   }
 
-  function buildTickerItem(pair, price, decimals, prevPrice) {
-    const up  = price >= prevPrice;
-    const dir = up ? "▲" : "▼";
-    const cls = up ? "up" : "down";
-    const diff = Math.abs(price - prevPrice).toFixed(decimals);
+  // Fetch real rates (updates daily on the CDN, no API key needed)
+  async function fetchRates() {
+    try {
+      const res  = await fetch(
+        "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json"
+      );
+      const data = await res.json();
+      const r    = data.usd;
+      PAIRS.forEach((p) => {
+        const price = parseFloat(calcFromRates(r, p).toFixed(p.decimals));
+        prevPrice[p.pair] = livePrice[p.pair] ?? price;
+        livePrice[p.pair] = price;
+      });
+      renderTicker();
+    } catch (_) {
+      // Fallback static prices if network fails
+      if (!livePrice["EUR/USD"]) {
+        const fb = {
+          "EUR/USD": 1.08560, "GBP/USD": 1.27340, "USD/JPY": 149.850,
+          "AUD/USD": 0.65230, "USD/CAD": 1.36870, "EUR/GBP": 0.85240,
+          "USD/CHF": 0.89650, "XAU/USD": 2341.50, "BTC/USD": 67450,
+          "NZD/USD": 0.60120,
+        };
+        PAIRS.forEach((p) => { livePrice[p.pair] = fb[p.pair]; prevPrice[p.pair] = fb[p.pair]; });
+        renderTicker();
+      }
+    }
+  }
+
+  function buildItem(pair, price, prev, decimals) {
+    const up   = price >= (prev ?? price);
+    const diff = Math.abs(price - (prev ?? price)).toFixed(decimals);
     return `<span class="ticker-item">
       <span class="pair">${pair}</span>
       <span class="price">${price.toFixed(decimals)}</span>
-      <span class="change ${cls}">${dir} ${diff}</span>
+      <span class="change ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${diff}</span>
     </span>`;
   }
 
   function renderTicker() {
     if (!tickerTrack) return;
-    const html = pairs.map((p) => buildTickerItem(p.pair, p.price, p.decimals, p.price)).join("");
-    // Duplicate for seamless loop
-    tickerTrack.innerHTML = html + html;
+    const html = PAIRS.map((p) =>
+      buildItem(p.pair, livePrice[p.pair] || 0, prevPrice[p.pair], p.decimals)
+    ).join("");
+    tickerTrack.innerHTML = html + html; // duplicate for seamless CSS loop
   }
 
-  // Update prices every 3 seconds with subtle fluctuations
-  function updateTicker() {
+  // Apply subtle jitter every 3 s to simulate live movement between API refreshes
+  function tickerJitter() {
     if (!tickerTrack) return;
     const items = tickerTrack.querySelectorAll(".ticker-item");
     const half  = items.length / 2;
-
-    pairs.forEach((p, i) => {
-      const prevPrice = p.price;
-      p.price = jitter(p.price, p.decimals);
-      const up  = p.price >= prevPrice;
-      const dir = up ? "▲" : "▼";
-      const cls = up ? "up" : "down";
-      const diff = Math.abs(p.price - prevPrice).toFixed(p.decimals);
-
-      // Update both copies (the duplicate for the loop)
-      [items[i], items[i + half]].forEach((item) => {
-        if (!item) return;
-        item.querySelector(".price").textContent = p.price.toFixed(p.decimals);
-        const change = item.querySelector(".change");
-        change.textContent  = `${dir} ${diff}`;
-        change.className    = `change ${cls}`;
+    PAIRS.forEach((p, i) => {
+      const prev = livePrice[p.pair];
+      const pct  = 0.00015; // 0.015 % max swing per tick
+      const next = parseFloat((prev * (1 + (Math.random() * pct * 2 - pct))).toFixed(p.decimals));
+      const up   = next >= prev;
+      const diff = Math.abs(next - prev).toFixed(p.decimals);
+      livePrice[p.pair] = next;
+      [items[i], items[i + half]].forEach((el) => {
+        if (!el) return;
+        el.querySelector(".price").textContent = next.toFixed(p.decimals);
+        const ch = el.querySelector(".change");
+        ch.textContent = `${up ? "▲" : "▼"} ${diff}`;
+        ch.className   = `change ${up ? "up" : "down"}`;
       });
     });
   }
 
-  renderTicker();
-  setInterval(updateTicker, 3000);
+  // Fetch live rates immediately and refresh every 10 minutes
+  fetchRates();
+  setInterval(fetchRates, 10 * 60 * 1000);
+  // Animate every 3 seconds
+  setInterval(tickerJitter, 3000);
 
   /* ============================================================
      FAQ ACCORDION

@@ -1,30 +1,37 @@
 "use strict";
 
-/* ── Apply saved theme before first paint ─────────────────── */
-(function () {
-  var t = localStorage.getItem("jhfx-theme") || "dark";
-  document.documentElement.setAttribute("data-theme", t);
-})();
-
-/* ── Theme toggle wiring ──────────────────────────────────── */
+/* ============================================================
+   LOGO — click to go home, triple-tap to open admin login
+   ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
-  function getTheme()  { return document.documentElement.getAttribute("data-theme") || "dark"; }
-  function setTheme(t) {
-    document.documentElement.setAttribute("data-theme", t);
-    localStorage.setItem("jhfx-theme", t);
-    updateIcons(t);
-  }
-  function updateIcons(t) {
-    document.querySelectorAll(".theme-toggle i").forEach(function (i) {
-      i.className = t === "light" ? "fas fa-sun" : "fas fa-moon";
-    });
-  }
+  var logo = document.querySelector(".logo-container");
+  if (!logo) return;
 
-  updateIcons(getTheme());
+  logo.style.cursor = "pointer";
 
-  document.querySelectorAll(".theme-toggle").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      setTheme(getTheme() === "dark" ? "light" : "dark");
-    });
+  var taps = 0;
+  var tapTimer = null;
+
+  logo.addEventListener("click", function () {
+    taps++;
+    clearTimeout(tapTimer);
+
+    if (taps >= 3) {
+      taps = 0;
+      window.location.href = "admin.html";
+      return;
+    }
+
+    tapTimer = setTimeout(function () {
+      var path = window.location.pathname;
+      var isHome = path === "/" || path.endsWith("/JhayFx/") ||
+                   path.includes("index") || path.endsWith("/");
+      if (isHome) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        window.location.href = "index.html";
+      }
+      taps = 0;
+    }, 550);
   });
 });
