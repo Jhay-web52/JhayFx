@@ -122,4 +122,31 @@ function getTimeAgo(dateStr) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
+/* ── Weekly performance ───────────────────────────────────── */
+async function loadWeeklySignalStats() {
+  const now = new Date();
+  const day = now.getDay();
+  const daysFromMon = (day === 0 ? 6 : day - 1);
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - daysFromMon);
+  monday.setHours(0, 0, 0, 0);
+
+  const { data } = await db
+    .from("signals")
+    .select("status")
+    .gte("created_at", monday.toISOString());
+
+  const wins   = (data || []).filter((s) => s.status === "tp_hit").length;
+  const losses = (data || []).filter((s) => s.status === "sl_hit").length;
+
+  const wEl = document.getElementById("sig-week-wins");
+  const lEl = document.getElementById("sig-week-losses");
+  if (wEl) wEl.textContent = wins;
+  if (lEl) lEl.textContent = losses;
+
+  const bar = document.getElementById("signals-week-perf");
+  if (bar) bar.style.display = "flex";
+}
+
 loadSignals();
+loadWeeklySignalStats();

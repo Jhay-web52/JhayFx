@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="JhayFx Trading Academy — Expert forex education, live trading sessions, personalized mentorship, and exclusive community access." />
     <title>JhayFx Trading Academy</title>
+    <script>!function(){var t=localStorage.getItem("jhfx-theme")||"dark";document.documentElement.setAttribute("data-theme",t)}();</script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
@@ -45,6 +46,10 @@
             <li><a href="#booking" class="cta-button">Book Now</a></li>
           </ul>
         </nav>
+
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
 
         <button
           class="hamburger"
@@ -125,6 +130,25 @@
         </div>
       </div>
     </section>
+
+    <!-- ===== WEEKLY PERFORMANCE BAR ===== -->
+    <div class="weekly-perf-bar" id="weekly-perf-bar">
+      <span class="weekly-perf-label"><i class="fas fa-chart-line"></i> This Week's Signals</span>
+      <div class="weekly-perf-stats">
+        <span class="weekly-stat-win">
+          <i class="fas fa-trophy"></i>
+          <span id="week-wins-home">—</span>
+          <small>Wins</small>
+        </span>
+        <span class="weekly-stat-sep">vs</span>
+        <span class="weekly-stat-loss">
+          <i class="fas fa-times-circle"></i>
+          <span id="week-losses-home">—</span>
+          <small>Losses</small>
+        </span>
+      </div>
+      <a href="signals.html" class="weekly-perf-link">View Signals <i class="fas fa-arrow-right"></i></a>
+    </div>
 
     <!-- ===== ABOUT SECTION ===== -->
     <section id="about" class="about-section">
@@ -557,6 +581,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="config.js"></script>
+    <script src="theme.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>

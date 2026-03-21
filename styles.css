@@ -2410,3 +2410,221 @@ a   { text-decoration: none; }
   .admin-sidebar { width: 46px; padding: 0.75rem 0.3rem; }
   .admin-main    { padding: 0.85rem 0.55rem; }
 }
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+[data-theme="light"] {
+  --bg-light:    #eef2fc;
+  --bg-medium:   #f8faff;
+  --bg-dark:     #e2e8f5;
+  --bg-card:     #ffffff;
+  --text-primary:   #0d1117;
+  --text-secondary: #4a5568;
+  --accent-main:  #0070f3;
+  --accent-dark:  #0056b3;
+  --accent-light: #0056b3;
+  --accent-glow:  rgba(0, 112, 243, 0.15);
+  --border-color: rgba(0, 0, 0, 0.09);
+  --success:  #008f6c;
+  --danger:   #d63031;
+}
+
+[data-theme="light"] .header {
+  background-color: rgba(248, 250, 255, 0.88);
+}
+[data-theme="light"] .header.scrolled {
+  background-color: rgba(248, 250, 255, 0.98);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .preloader { background: #eef2fc; }
+[data-theme="light"] .preloader-logo { color: #fff; }
+
+[data-theme="light"] .hero-section::before {
+  background: linear-gradient(
+    160deg,
+    rgba(238, 242, 252, 0.82) 0%,
+    rgba(238, 242, 252, 0.91) 50%,
+    rgba(238, 242, 252, 0.97) 100%
+  );
+}
+[data-theme="light"] .hero-title { color: #0d1117; }
+[data-theme="light"] .hero-subtitle { color: #4a5568; }
+[data-theme="light"] .hero-badge {
+  background: rgba(0, 112, 243, 0.08);
+  border-color: rgba(0, 112, 243, 0.25);
+}
+
+[data-theme="light"] .pricing-card.featured {
+  background: linear-gradient(145deg, #dce8ff 0%, #eef3ff 100%);
+}
+
+[data-theme="light"] .mobile-nav {
+  background: #f8faff;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+[data-theme="light"] .mobile-nav ul li a { color: #4a5568; }
+[data-theme="light"] .mobile-nav ul li a:hover { background: rgba(0,0,0,0.04); color: #0d1117; }
+
+[data-theme="light"] .admin-login-screen { background: #eef2fc; }
+[data-theme="light"] .admin-login-card   { background: #ffffff; border-color: rgba(0,0,0,0.09); }
+[data-theme="light"] .admin-sidebar      { background: #ffffff; border-right: 1px solid rgba(0,0,0,0.09); }
+[data-theme="light"] .admin-main         { background: #f0f4fb; }
+[data-theme="light"] .sidebar-btn { color: #4a5568; }
+[data-theme="light"] .sidebar-btn:hover,
+[data-theme="light"] .sidebar-btn.active { background: rgba(0,112,243,0.08); color: #0d1117; }
+[data-theme="light"] .sidebar-signout { color: #d63031; }
+
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea {
+  background: #f0f4fb;
+  border-color: rgba(0,0,0,0.12);
+  color: #0d1117;
+}
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .form-group input:hover {
+  border-color: #0070f3;
+}
+
+[data-theme="light"] .scroll-progress { background: linear-gradient(to right, #0070f3, #a78bfa); }
+
+/* ============================================================
+   THEME TOGGLE BUTTON
+   ============================================================ */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  color: var(--accent-main);
+  border-color: var(--accent-main);
+  background: var(--accent-glow);
+}
+.sidebar-theme-toggle {
+  width: 100%;
+  border-radius: 0.6rem;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+.sidebar-theme-toggle::after {
+  content: "Toggle Theme";
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* ── Signals page header right group ── */
+.signals-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ============================================================
+   WEEKLY PERFORMANCE — Homepage bar
+   ============================================================ */
+.weekly-perf-bar {
+  display: none; /* shown by JS after data loads */
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1.25rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+.weekly-perf-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.weekly-perf-label i { color: var(--accent-main); }
+.weekly-perf-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.weekly-stat-win,
+.weekly-stat-loss {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.weekly-stat-win  { color: var(--success); }
+.weekly-stat-loss { color: var(--danger);  }
+.weekly-stat-win i,
+.weekly-stat-loss i { font-size: 0.8rem; }
+.weekly-stat-win span,
+.weekly-stat-loss span { font-size: 1.15rem; }
+.weekly-stat-win small,
+.weekly-stat-loss small { font-size: 0.72rem; font-weight: 500; color: var(--text-secondary); }
+.weekly-stat-sep {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  opacity: 0.5;
+}
+.weekly-perf-link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color var(--transition);
+}
+.weekly-perf-link:hover { color: var(--text-primary); }
+.weekly-perf-link i { font-size: 0.7rem; }
+
+/* ============================================================
+   WEEKLY PERFORMANCE — Signals page compact bar
+   ============================================================ */
+.signals-week-perf {
+  display: none; /* shown by JS after data loads */
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.swp-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.swp-win  { color: var(--success); }
+.swp-loss { color: var(--danger);  }
+.swp-divider {
+  color: var(--text-secondary);
+  opacity: 0.4;
+  font-weight: 400;
+}
+
+/* sidebar toggle text hidden in icon-only mode */
+@media (max-width: 640px) {
+  .sidebar-theme-toggle::after { display: none; }
+}
