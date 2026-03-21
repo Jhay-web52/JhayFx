@@ -2278,3 +2278,129 @@ a   { text-decoration: none; }
   padding: 0.25rem 0.65rem;
   border-radius: 2rem;
 }
+
+/* ============================================================
+   RESPONSIVE OVERHAUL — Community, Featured, Signals, Admin
+   ============================================================ */
+
+/* ── iPad portrait / small desktop (max 1024px) ── */
+@media (max-width: 1024px) {
+  .admin-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Tablet (max 900px) ── */
+@media (max-width: 900px) {
+  .signals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .featured-trades-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Mobile-first base (max 768px) ── */
+@media (max-width: 768px) {
+  /* Community slideshow */
+  .slideshow-wrap { margin: 1rem 0 0; }
+  .slideshow-btn  { width: 32px; height: 32px; font-size: 0.72rem; }
+
+  /* Featured trades */
+  .featured-section { padding: 4rem 0; }
+  .featured-trades-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  /* Signal page */
+  .page-main { padding: 3rem 0 5rem; }
+  .signals-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  /* Admin dashboard */
+  .admin-tab-header h2 { font-size: 1rem; }
+  .admin-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Small phones + landscape phones (max 640px) ── */
+@media (max-width: 640px) {
+  /* Community */
+  .community-section { padding: 3.5rem 0; }
+  .slideshow-wrap { border-radius: 0.75rem; }
+  .slide-info { padding: 0.65rem 0.85rem; flex-wrap: wrap; gap: 0.4rem; }
+  .slide-name  { font-size: 0.82rem; }
+  .slide-caption { font-size: 0.74rem; }
+
+  /* Featured */
+  .featured-trades-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  /* Signals page */
+  .signals-grid {
+    grid-template-columns: 1fr;
+  }
+  .signal-card-header { flex-wrap: wrap; gap: 0.4rem; }
+  .signal-pair-wrap   { flex-wrap: wrap; }
+  .signal-levels {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Admin signals list rows */
+  .admin-signal-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .admin-signal-actions { align-self: flex-end; }
+
+  /* Signals form (admin) */
+  .direction-toggle { flex-direction: row; }
+}
+
+/* ── Small phones (max 480px) ── */
+@media (max-width: 479px) {
+  /* Pricing — tighten for ₦ amounts */
+  .pricing-card { padding: 1.5rem 1.25rem 1.25rem; }
+  .plan-price   { font-size: 2rem; }
+
+  /* Signal card levels to single column on very narrow */
+  .signal-levels { grid-template-columns: repeat(2, 1fr); }
+
+  /* Slideshow nav buttons smaller */
+  .slideshow-btn { width: 28px; height: 28px; font-size: 0.65rem; }
+  .slideshow-btn.prev { left: 0.35rem; }
+  .slideshow-btn.next { right: 0.35rem; }
+
+  /* Filter bar buttons smaller */
+  .filter-btn { font-size: 0.75rem; padding: 0.38rem 0.75rem; }
+
+  /* Page hero text */
+  .page-hero .section-title   { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .page-hero .section-subtitle { font-size: 0.88rem; }
+
+  /* Admin sidebar fully collapsed, icon-only */
+  .admin-sidebar { width: 52px; padding: 0.85rem 0.4rem; }
+  .admin-main    { padding: 1rem 0.7rem; }
+  .featured-upload-card { padding: 1rem; }
+}
+
+/* ── Very small phones (max 360px) ── */
+@media (max-width: 360px) {
+  .hero-title    { font-size: 1.65rem; }
+  .plan-price    { font-size: 1.75rem; }
+  .pricing-card  { padding: 1.25rem 1rem 1rem; }
+  .stats-item .stat-number { font-size: 2rem; }
+
+  /* Signal levels: 1 column on truly tiny screens */
+  .signal-levels { grid-template-columns: 1fr 1fr; }
+
+  /* Ticker */
+  .ticker-bar    { height: 28px; }
+  .ticker-item   { font-size: 0.62rem; padding: 0 0.75rem; }
+  .ticker-label  { font-size: 0.58rem; padding: 0 0.5rem; }
+
+  /* Admin */
+  .admin-sidebar { width: 46px; padding: 0.75rem 0.3rem; }
+  .admin-main    { padding: 0.85rem 0.55rem; }
+}
