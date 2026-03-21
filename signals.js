@@ -11,6 +11,7 @@ if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
   window.OneSignalDeferred.push(function (OneSignal) {
     OneSignal.init({
       appId: ONESIGNAL_APP_ID,
+      safari_web_id: typeof ONESIGNAL_SAFARI_ID !== "undefined" ? ONESIGNAL_SAFARI_ID : "",
       allowLocalhostAsSecureOrigin: true,
       serviceWorkerPath: "sw.js",
       serviceWorkerParam: { scope: "./" },
