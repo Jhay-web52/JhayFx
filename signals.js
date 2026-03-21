@@ -1,5 +1,36 @@
 "use strict";
 
+/* ── Service Worker ─────────────────────────────────────── */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {});
+}
+
+/* ── OneSignal init ─────────────────────────────────────── */
+if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  window.OneSignalDeferred.push(function (OneSignal) {
+    OneSignal.init({
+      appId: ONESIGNAL_APP_ID,
+      allowLocalhostAsSecureOrigin: true,
+      serviceWorkerPath: "sw.js",
+      serviceWorkerParam: { scope: "./" },
+    });
+    // Bell button
+    const bellBtn = document.getElementById("push-bell-btn");
+    if (bellBtn) {
+      bellBtn.addEventListener("click", () => {
+        OneSignal.Slidedown.promptPush();
+      });
+      OneSignal.User.PushSubscription.addEventListener("change", (e) => {
+        if (e.current.optedIn) {
+          bellBtn.innerHTML = '<i class="fas fa-bell"></i> Alerts On';
+          bellBtn.classList.add("bell-on");
+        }
+      });
+    }
+  });
+}
+
 const { createClient } = window.supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -150,3 +181,102 @@ async function loadWeeklySignalStats() {
 
 loadSignals();
 loadWeeklySignalStats();
+loadPerformanceChart();
+
+/* ── Signal Performance Chart ─────────────────────────────── */
+async function loadPerformanceChart() {
+  if (typeof Chart === "undefined") return;
+
+  // Fetch last 8 weeks of closed signals
+  const since = new Date();
+  since.setDate(since.getDate() - 56);
+
+  const { data } = await db
+    .from("signals")
+    .select("status, created_at")
+    .in("status", ["tp_hit", "sl_hit"])
+    .gte("created_at", since.toISOString());
+
+  if (!data || !data.length) return;
+
+  // Group by week (Monday start)
+  const weekMap = {};
+  data.forEach((s) => {
+    const d = new Date(s.created_at);
+    const day = d.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const mon = new Date(d);
+    mon.setDate(d.getDate() - diff);
+    mon.setHours(0, 0, 0, 0);
+    const key = mon.toISOString().slice(0, 10);
+    if (!weekMap[key]) weekMap[key] = { wins: 0, losses: 0 };
+    if (s.status === "tp_hit") weekMap[key].wins++;
+    else weekMap[key].losses++;
+  });
+
+  const weeks  = Object.keys(weekMap).sort();
+  if (!weeks.length) return;
+
+  const labels  = weeks.map((w) => {
+    const d = new Date(w);
+    return d.toLocaleDateString("en-GB", { month: "short", day: "numeric" });
+  });
+  const wins    = weeks.map((w) => weekMap[w].wins);
+  const losses  = weeks.map((w) => weekMap[w].losses);
+
+  const section = document.getElementById("perf-chart-section");
+  if (section) section.style.display = "block";
+
+  const ctx = document.getElementById("perf-chart").getContext("2d");
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Wins (TP Hit)",
+          data: wins,
+          backgroundColor: "rgba(0, 212, 160, 0.65)",
+          borderColor: "rgba(0, 212, 160, 1)",
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+        {
+          label: "Losses (SL Hit)",
+          data: losses,
+          backgroundColor: "rgba(255, 82, 82, 0.65)",
+          borderColor: "rgba(255, 82, 82, 1)",
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          labels: { color: "#a0aec0", font: { size: 12 }, boxWidth: 12 },
+        },
+        tooltip: {
+          backgroundColor: "#232340",
+          titleColor: "#ffffff",
+          bodyColor: "#a0aec0",
+          borderColor: "rgba(255,255,255,0.07)",
+          borderWidth: 1,
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: "#a0aec0", font: { size: 11 } },
+          grid:  { color: "rgba(255,255,255,0.04)" },
+        },
+        y: {
+          ticks: { color: "#a0aec0", stepSize: 1, font: { size: 11 } },
+          grid:  { color: "rgba(255,255,255,0.04)" },
+          min: 0,
+        },
+      },
+    },
+  });
+}

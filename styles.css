@@ -2636,3 +2636,67 @@ a   { text-decoration: none; }
 @media (max-width: 640px) {
   .sidebar-theme-toggle::after { display: none; }
 }
+
+/* ============================================================
+   PERFORMANCE CHART
+   ============================================================ */
+.perf-chart-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.25rem 1rem;
+  margin-bottom: 1.5rem;
+}
+.perf-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.perf-chart-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.perf-chart-label i { color: var(--accent-main); }
+.perf-chart-sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  opacity: 0.55;
+}
+
+/* ============================================================
+   PUSH BELL BUTTON
+   ============================================================ */
+.push-bell-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.push-bell-btn:hover {
+  border-color: var(--accent-main);
+  color: var(--accent-light);
+  background: var(--accent-glow);
+}
+.push-bell-btn.bell-on {
+  border-color: var(--success);
+  color: var(--success);
+  background: rgba(0, 212, 160, 0.08);
+}

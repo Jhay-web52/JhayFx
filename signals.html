@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trade Signals — JhayFx Academy</title>
     <meta name="description" content="Live forex trade signals from JhayFx Academy. Real-time BUY and SELL signals with entry, stop loss, and take profit levels." />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#007bff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="JhayFx" />
+    <link rel="apple-touch-icon" href="logo.JPG" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   </head>
   <body>
 
@@ -42,6 +50,24 @@
           <span class="swp-item swp-win"><i class="fas fa-trophy"></i> <span id="sig-week-wins">—</span> Wins this week</span>
           <span class="swp-divider">|</span>
           <span class="swp-item swp-loss"><i class="fas fa-times-circle"></i> <span id="sig-week-losses">—</span> Losses</span>
+        </div>
+
+        <!-- Signal Bell -->
+        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem">
+          <button class="push-bell-btn" id="push-bell-btn">
+            <i class="fas fa-bell"></i> Get Signal Alerts
+          </button>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="perf-chart-section" id="perf-chart-section" style="display:none">
+          <div class="perf-chart-header">
+            <span class="perf-chart-label"><i class="fas fa-chart-bar"></i> Weekly Signal History</span>
+            <span class="perf-chart-sub">Last 8 weeks</span>
+          </div>
+          <div class="perf-chart-wrap">
+            <canvas id="perf-chart"></canvas>
+          </div>
         </div>
 
         <!-- Filter Bar -->

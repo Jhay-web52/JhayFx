@@ -428,6 +428,14 @@ document.getElementById("signal-form").addEventListener("submit", async (e) => {
     setSigStatus("Error: " + error.message, "error");
   } else {
     setSigStatus("Signal posted!", "success");
+    // Push notification to all subscribers
+    db.functions.invoke("send-push", {
+      body: {
+        title: `📊 New Signal: ${pair} ${selectedDirection}`,
+        message: `Entry: ${entry} | SL: ${sl} | TP: ${tp1}${tp2 ? " / " + tp2 : ""}${note ? " — " + note : ""}`,
+        url: "signals.html",
+      },
+    }).catch(() => {});
     document.getElementById("signal-form").reset();
     ["sig-tp1","sig-tp2"].forEach((id) => { document.getElementById(id).value = ""; });
     selectedDirection = "BUY";

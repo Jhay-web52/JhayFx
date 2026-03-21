@@ -1,0 +1,17 @@
+{
+  "name": "JhayFx Trading Academy",
+  "short_name": "JhayFx",
+  "description": "Expert forex education, live signals, and trading community",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0d1a",
+  "theme_color": "#007bff",
+  "lang": "en",
+  "categories": ["finance", "education"],
+  "icons": [
+    { "src": "logo.JPG", "sizes": "192x192", "type": "image/jpeg", "purpose": "any maskable" },
+    { "src": "logo.JPG", "sizes": "512x512", "type": "image/jpeg", "purpose": "any maskable" }
+  ]
+}
