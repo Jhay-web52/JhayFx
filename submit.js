@@ -91,6 +91,14 @@ form.addEventListener("submit", async (e) => {
     });
     if (dbErr) throw dbErr;
 
+    // Notify admin on Telegram
+    const message = `🔔 *New Trade Submission*\n\n👤 *Name:* ${name}${caption ? `\n📝 *Caption:* ${caption}` : ""}\n\n✅ Open your admin panel to review it.`;
+    fetch(`https://api.telegram.org/bot8729063640:AAFTxeCg22YGO0y9UbLV7Li9K1wNR7df3aE/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: 1557573521, text: message, parse_mode: "Markdown" }),
+    }).catch(() => {}); // silent fail — don't block the user if Telegram is down
+
     form.style.display = "none";
     document.getElementById("success-state").style.display = "block";
   } catch (err) {
