@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trade Signals — JhayFx Academy</title>
+    <meta name="description" content="Live forex trade signals from JhayFx Academy. Real-time BUY and SELL signals with entry, stop loss, and take profit levels." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="header">
+      <div class="header-container">
+        <div class="logo-container">
+          <img src="logo.JPG" alt="JhayFx Academy Logo" class="logo"
+            onerror="this.onerror=null; this.src='https://placehold.co/48x48/007bff/0d0d1a?text=JF';" />
+          <span class="logo-text">JhayFx Academy</span>
+        </div>
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="section-container">
+
+        <!-- Hero -->
+        <div class="page-hero">
+          <div class="signals-live-badge">
+            <i class="fas fa-circle"></i> LIVE SIGNALS
+          </div>
+          <h1 class="section-title">Trade Signals</h1>
+          <p class="section-subtitle">
+            Real-time BUY &amp; SELL signals from our expert analysts.
+            Join a plan to get signals directly on WhatsApp.
+          </p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="signals-filter-bar" id="filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">
+            <span class="filter-dot active-dot"></span> Active
+          </button>
+          <button class="filter-btn" data-filter="tp_hit">
+            <span class="filter-dot tp-dot"></span> TP Hit
+          </button>
+          <button class="filter-btn" data-filter="sl_hit">
+            <span class="filter-dot sl-dot"></span> SL Hit
+          </button>
+          <button class="filter-btn" data-filter="closed">
+            <span class="filter-dot closed-dot"></span> Closed
+          </button>
+        </div>
+
+        <!-- Loading -->
+        <div class="slideshow-loading-state" id="signals-loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading signals&hellip;
+        </div>
+
+        <!-- Empty -->
+        <div class="slideshow-empty" id="signals-empty" style="display:none">
+          <i class="fas fa-broadcast-tower"></i>
+          <p>No signals posted yet. Check back soon.</p>
+        </div>
+
+        <!-- Signals Grid -->
+        <div class="signals-grid" id="signals-grid"></div>
+
+        <!-- CTA -->
+        <div class="signals-cta" id="signals-cta" style="display:none">
+          <p>Want signals delivered directly to you?</p>
+          <a href="index.html#pricing" class="hero-cta">
+            <i class="fas fa-bolt"></i> View Plans
+          </a>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="config.js"></script>
+    <script src="signals.js"></script>
+  </body>
+</html>

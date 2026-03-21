@@ -67,12 +67,14 @@ document.querySelectorAll(".sidebar-btn[data-tab]").forEach((btn) => {
     if (tab === "pending")  loadPending();
     if (tab === "approved") loadApproved();
     if (tab === "featured") loadFeatured();
+    if (tab === "signals")  loadSignals();
   });
 });
 
 document.getElementById("refresh-pending").addEventListener("click",  loadPending);
 document.getElementById("refresh-approved").addEventListener("click", loadApproved);
 document.getElementById("refresh-featured").addEventListener("click", loadFeatured);
+document.getElementById("refresh-signals").addEventListener("click",  loadSignals);
 
 /* ══════════════════════════════════════════════════════════════════════
    HELPERS
@@ -372,6 +374,130 @@ window.deleteFeatured = async function (id, encodedPath) {
   const card = document.getElementById(`feat-card-${id}`);
   card.style.opacity = "0";
   setTimeout(() => card.remove(), 320);
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+   SIGNALS
+══════════════════════════════════════════════════════════════════════ */
+let selectedDirection = "BUY";
+
+document.getElementById("dir-buy").addEventListener("click", () => {
+  selectedDirection = "BUY";
+  document.getElementById("dir-buy").classList.add("active");
+  document.getElementById("dir-sell").classList.remove("active");
+});
+document.getElementById("dir-sell").addEventListener("click", () => {
+  selectedDirection = "SELL";
+  document.getElementById("dir-sell").classList.add("active");
+  document.getElementById("dir-buy").classList.remove("active");
+});
+
+document.getElementById("signal-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn  = document.getElementById("sig-submit-btn");
+  const pair = document.getElementById("sig-pair").value.trim().toUpperCase();
+  const entry = document.getElementById("sig-entry").value.trim();
+  const sl    = document.getElementById("sig-sl").value.trim();
+  const tp    = document.getElementById("sig-tp").value.trim();
+  const note  = document.getElementById("sig-note").value.trim();
+
+  if (!pair || !entry || !sl || !tp) {
+    setSigStatus("Please fill in all required fields.", "error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting\u2026';
+  setSigStatus("", "");
+
+  const { error } = await db.from("signals").insert({
+    pair,
+    direction:   selectedDirection,
+    entry,
+    stop_loss:   sl,
+    take_profit: tp,
+    note:        note || null,
+    status:      "active",
+  });
+
+  if (error) {
+    setSigStatus("Error: " + error.message, "error");
+  } else {
+    setSigStatus("Signal posted!", "success");
+    document.getElementById("signal-form").reset();
+    selectedDirection = "BUY";
+    document.getElementById("dir-buy").classList.add("active");
+    document.getElementById("dir-sell").classList.remove("active");
+    loadSignals();
+  }
+
+  btn.disabled  = false;
+  btn.innerHTML = '<i class="fas fa-broadcast-tower"></i> Post Signal';
+});
+
+function setSigStatus(msg, type) {
+  const el = document.getElementById("signal-status");
+  el.textContent = msg;
+  el.className   = "form-status" + (type ? " " + type : "");
+}
+
+async function loadSignals() {
+  const list = document.getElementById("admin-signals-list");
+  list.innerHTML = loadingHTML();
+
+  const { data, error } = await db
+    .from("signals")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) { list.innerHTML = errorHTML(error.message); return; }
+
+  if (!data.length) {
+    list.innerHTML = emptyHTML("fas fa-broadcast-tower", "No signals posted yet.");
+    return;
+  }
+
+  const statusLabels = { active: "Active", tp_hit: "TP Hit", sl_hit: "SL Hit", closed: "Closed" };
+
+  list.innerHTML = data.map((s) => `
+    <div class="admin-signal-row" id="sig-row-${s.id}">
+      <div class="admin-signal-info">
+        <span class="signal-pair">${esc(s.pair)}</span>
+        <span class="signal-direction ${s.direction === "BUY" ? "dir-buy" : "dir-sell"}">
+          <i class="fas fa-arrow-${s.direction === "BUY" ? "up" : "down"}"></i> ${s.direction}
+        </span>
+        <span class="admin-sig-levels">
+          E: ${esc(s.entry)} &nbsp;|&nbsp; SL: ${esc(s.stop_loss)} &nbsp;|&nbsp; TP: ${esc(s.take_profit)}
+        </span>
+        ${s.note ? `<span class="admin-sig-note">${esc(s.note)}</span>` : ""}
+      </div>
+      <div class="admin-signal-actions">
+        ${s.status === "active" ? `
+          <button class="action-btn approve-btn" onclick="updateSignal('${s.id}','tp_hit')">TP Hit</button>
+          <button class="action-btn reject-btn"  onclick="updateSignal('${s.id}','sl_hit')">SL Hit</button>
+          <button class="action-btn"             onclick="updateSignal('${s.id}','closed')" style="background:rgba(255,255,255,0.05);color:var(--text-secondary);border:1px solid var(--border-color)">Close</button>
+        ` : `<span class="admin-sig-status-badge">${statusLabels[s.status] || s.status}</span>`}
+        <button class="action-btn delete-btn" onclick="deleteSignal('${s.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.updateSignal = async function (id, status) {
+  const { error } = await db.from("signals").update({ status }).eq("id", id);
+  if (error) { alert("Error: " + error.message); return; }
+  loadSignals();
+};
+
+window.deleteSignal = async function (id) {
+  if (!confirm("Delete this signal?")) return;
+  const { error } = await db.from("signals").delete().eq("id", id);
+  if (error) { alert("Error: " + error.message); return; }
+  const row = document.getElementById(`sig-row-${id}`);
+  row.style.opacity = "0";
+  setTimeout(() => row.remove(), 320);
 };
 
 /* ══════════════════════════════════════════════════════════════════════

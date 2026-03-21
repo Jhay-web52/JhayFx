@@ -1989,3 +1989,287 @@ a   { text-decoration: none; }
   .admin-main { padding: 1.25rem 0.85rem; }
   .admin-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   SIGNALS — Public Page
+   ============================================================ */
+.signals-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(0, 212, 160, 0.08);
+  border: 1px solid rgba(0, 212, 160, 0.25);
+  color: var(--success);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.85rem;
+  border-radius: 2rem;
+  margin-bottom: 1rem;
+}
+.signals-live-badge i { font-size: 0.5rem; animation: blink 1.2s step-start infinite; }
+
+/* ── Filter bar ── */
+.signals-filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 auto 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--accent-main);
+  border-color: var(--accent-main);
+  color: #fff;
+}
+.filter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.active-dot { background: var(--accent-light); }
+.tp-dot     { background: var(--success); }
+.sl-dot     { background: var(--danger); }
+.closed-dot { background: var(--text-secondary); }
+
+/* ── Signals grid ── */
+.signals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+.signals-no-result {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 3rem 0;
+  color: var(--text-secondary);
+}
+.signals-no-result i { font-size: 2rem; opacity: 0.3; }
+
+/* ── Signal card ── */
+.signal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  border-left: 4px solid transparent;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.signal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+.signal-card.buy  { border-left-color: var(--success); }
+.signal-card.sell { border-left-color: var(--danger); }
+.signal-card.signal-active {
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.2);
+}
+
+.signal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+.signal-pair-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.signal-pair {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+}
+.signal-direction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2rem;
+}
+.dir-buy  { background: rgba(0, 212, 160, 0.12); color: var(--success); }
+.dir-sell { background: rgba(255,  82,  82, 0.12); color: var(--danger); }
+
+/* Status badges */
+.signal-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+  border-radius: 2rem;
+  white-space: nowrap;
+}
+.status-active { background: rgba(0, 123, 255, 0.12); color: var(--accent-light); border: 1px solid rgba(0,123,255,0.2); }
+.status-tp     { background: rgba(0, 212, 160, 0.12); color: var(--success);      border: 1px solid rgba(0,212,160,0.25); }
+.status-sl     { background: rgba(255,  82,  82, 0.1); color: var(--danger);       border: 1px solid rgba(255,82,82,0.2); }
+.status-closed { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color); }
+
+/* Pulse dot */
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  animation: pulseDot 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* Levels */
+.signal-levels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  background: var(--bg-medium);
+  border-radius: 0.6rem;
+  padding: 0.85rem 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.signal-level { display: flex; flex-direction: column; gap: 0.2rem; }
+.level-label  { font-size: 0.68rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
+.level-value  { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); font-family: "Courier New", monospace; }
+.sl-value     { color: var(--danger); }
+.tp-value     { color: var(--success); }
+
+.signal-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.65rem;
+  display: flex;
+  gap: 0.4rem;
+  line-height: 1.5;
+}
+.signal-note i { color: var(--accent-main); flex-shrink: 0; margin-top: 0.15rem; }
+.signal-time   { font-size: 0.73rem; color: var(--text-secondary); opacity: 0.6; display: flex; align-items: center; gap: 0.35rem; }
+
+/* ── Signals CTA ── */
+.signals-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+.signals-cta p { color: var(--text-secondary); font-size: 0.95rem; }
+
+/* ============================================================
+   SIGNALS — Admin Panel
+   ============================================================ */
+.direction-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+.dir-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-medium);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all var(--transition);
+}
+.buy-btn.active  { background: rgba(0, 212, 160, 0.15); color: var(--success); border-color: rgba(0,212,160,0.35); }
+.sell-btn.active { background: rgba(255,  82,  82, 0.15); color: var(--danger);  border-color: rgba(255,82,82,0.35); }
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .form-row-3 { grid-template-columns: 1fr; }
+}
+
+/* Admin signals list */
+.admin-signals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.admin-signal-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  transition: opacity 0.3s;
+}
+.admin-signal-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+.admin-sig-levels {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-family: "Courier New", monospace;
+}
+.admin-sig-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  width: 100%;
+}
+.admin-signal-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.admin-sig-status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.65rem;
+  border-radius: 2rem;
+}
