@@ -79,10 +79,7 @@ function signalCard(s) {
           <span class="level-label">Stop Loss</span>
           <span class="level-value sl-value">${esc(s.stop_loss)}</span>
         </div>
-        <div class="signal-level">
-          <span class="level-label">Take Profit</span>
-          <span class="level-value tp-value">${esc(s.take_profit)}</span>
-        </div>
+        ${buildTpLevels(s.take_profit)}
       </div>
 
       ${s.note ? `<p class="signal-note"><i class="fas fa-comment-alt"></i> ${esc(s.note)}</p>` : ""}
@@ -99,6 +96,16 @@ document.querySelectorAll(".filter-btn").forEach((btn) => {
     renderSignals(btn.dataset.filter);
   });
 });
+
+/* ── TP levels builder ────────────────────────────────────────────── */
+function buildTpLevels(tpStr) {
+  const tps = (tpStr || "").split(",").map((t) => t.trim()).filter(Boolean);
+  return tps.map((val, i) => `
+    <div class="signal-level">
+      <span class="level-label">TP ${tps.length > 1 ? i + 1 : ""}</span>
+      <span class="level-value tp-value">${esc(val)}</span>
+    </div>`).join("");
+}
 
 /* ── Helpers ──────────────────────────────────────────────────────── */
 function esc(str) {

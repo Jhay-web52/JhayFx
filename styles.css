@@ -2149,7 +2149,7 @@ a   { text-decoration: none; }
 /* Levels */
 .signal-levels {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   gap: 0.5rem;
   background: var(--bg-medium);
   border-radius: 0.6rem;
@@ -2210,6 +2210,7 @@ a   { text-decoration: none; }
 }
 .buy-btn.active  { background: rgba(0, 212, 160, 0.15); color: var(--success); border-color: rgba(0,212,160,0.35); }
 .sell-btn.active { background: rgba(255,  82,  82, 0.15); color: var(--danger);  border-color: rgba(255,82,82,0.35); }
+.tp-optional { font-size: 0.7rem; font-weight: 500; color: var(--text-secondary); opacity: 0.6; margin-left: 4px; }
 
 .form-row-3 {
   display: grid;
