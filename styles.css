@@ -221,7 +221,7 @@ a   { text-decoration: none; }
 
 .nav-links {
   display: flex;
-  gap: 1.6rem;
+  gap: 1.9rem;
   list-style: none;
   align-items: center;
 }
