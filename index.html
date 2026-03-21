@@ -41,6 +41,7 @@
             <li><a href="#services">Services</a></li>
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#brokers">Brokers</a></li>
+            <li><a href="#community">Trades</a></li>
             <li><a href="#booking" class="cta-button">Book Now</a></li>
           </ul>
         </nav>
@@ -65,6 +66,7 @@
           <li><a href="#services">Services</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#brokers">Brokers</a></li>
+          <li><a href="#community">Trades</a></li>
           <li><a href="#booking" class="mobile-cta">Book Now</a></li>
         </ul>
       </div>
@@ -388,6 +390,50 @@
       </div>
     </section>
 
+    <!-- ===== COMMUNITY TRADES SECTION ===== -->
+    <section id="community" class="community-section">
+      <div class="section-container">
+        <h2 class="section-title reveal">Community Trade Results</h2>
+        <p class="section-subtitle reveal">
+          Verified wins from our students.
+          <a href="submit.html" class="inline-link">Share yours &rarr;</a>
+        </p>
+        <div class="slideshow-loading-state" id="community-loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading trades&hellip;
+        </div>
+        <div class="slideshow-empty" id="community-empty" style="display:none">
+          <i class="fas fa-images"></i>
+          <p>No community trades yet. <a href="submit.html" class="inline-link">Be the first to share!</a></p>
+        </div>
+        <div class="slideshow-wrap" id="community-slideshow" style="display:none">
+          <div class="slideshow-track" id="community-track"></div>
+          <button class="slideshow-btn prev" id="community-prev" aria-label="Previous">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="slideshow-btn next" id="community-next" aria-label="Next">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="slideshow-dots" id="community-dots"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURED TRADES SECTION ===== -->
+    <section id="featured" class="featured-section">
+      <div class="section-container">
+        <h2 class="section-title reveal">JhayFx Live Trades</h2>
+        <p class="section-subtitle reveal">Real trades executed by our expert analysts.</p>
+        <div class="slideshow-loading-state" id="featured-loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading trades&hellip;
+        </div>
+        <div class="slideshow-empty" id="featured-empty" style="display:none">
+          <i class="fas fa-chart-line"></i>
+          <p>Featured trades coming soon.</p>
+        </div>
+        <div class="featured-trades-grid" id="featured-trades-grid" style="display:none"></div>
+      </div>
+    </section>
+
     <!-- ===== FAQ SECTION ===== -->
     <section class="faq-section">
       <div class="section-container faq-container">
@@ -498,6 +544,19 @@
       </div>
     </footer>
 
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox" style="display:none" role="dialog" aria-modal="true">
+      <div class="lightbox-overlay" id="lightbox-overlay"></div>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="Trade screenshot" />
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="config.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>

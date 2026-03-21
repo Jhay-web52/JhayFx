@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Your Trade — JhayFx Academy</title>
+    <meta name="description" content="Share your MetaTrader 5 trade screenshot with the JhayFx community." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="header">
+      <div class="header-container">
+        <div class="logo-container">
+          <img src="logo.JPG" alt="JhayFx Academy Logo" class="logo"
+            onerror="this.onerror=null; this.src='https://placehold.co/48x48/007bff/0d0d1a?text=JF';" />
+          <span class="logo-text">JhayFx Academy</span>
+        </div>
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="section-container">
+
+        <div class="page-hero">
+          <h1 class="section-title">Share Your Trade</h1>
+          <p class="section-subtitle">
+            Submit your MetaTrader 5 screenshot for review. Approved trades appear
+            in the Community section on our homepage.
+          </p>
+        </div>
+
+        <div class="form-card">
+
+          <!-- ── Form ── -->
+          <form id="trade-submit-form" novalidate>
+
+            <div class="form-group">
+              <label for="uploader-name">Your Name <span class="required">*</span></label>
+              <input type="text" id="uploader-name" placeholder="e.g. Adewale O."
+                required maxlength="80" autocomplete="name" />
+            </div>
+
+            <div class="form-group">
+              <label for="caption">Trade Caption</label>
+              <input type="text" id="caption"
+                placeholder="e.g. EUR/USD Long — 1:3 RR" maxlength="160" />
+            </div>
+
+            <div class="form-group">
+              <label>MT5 Screenshot <span class="required">*</span></label>
+              <div class="file-drop-zone" id="drop-zone">
+                <input type="file" id="screenshot" accept="image/*" required style="display:none" />
+                <div class="drop-zone-inner" id="drop-zone-inner">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>Drag &amp; drop or <span class="drop-browse">browse</span></p>
+                  <small>PNG, JPG — max 10 MB</small>
+                </div>
+                <div class="file-preview" id="file-preview" style="display:none">
+                  <img id="preview-img" src="" alt="Preview" />
+                  <button type="button" class="remove-file" id="remove-file" aria-label="Remove file">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-status" id="form-status"></div>
+
+            <button type="submit" class="hero-cta" id="submit-btn">
+              <i class="fas fa-paper-plane"></i> Submit Trade
+            </button>
+
+          </form>
+
+          <!-- ── Success State ── -->
+          <div class="success-state" id="success-state" style="display:none">
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h3>Trade Submitted!</h3>
+            <p>
+              Your screenshot is under review. Once approved by JhayFx,
+              it will appear in the Community Trades section on the homepage.
+            </p>
+            <a href="index.html" class="hero-cta" style="margin-top: 1.5rem">
+              Back to Home
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="config.js"></script>
+    <script src="submit.js"></script>
+  </body>
+</html>

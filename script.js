@@ -297,4 +297,162 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* ============================================================
+     TRADES — Community Slideshow + Featured Grid
+     ============================================================ */
+  if (typeof window.supabase !== "undefined" && typeof SUPABASE_URL !== "undefined") {
+    const { createClient } = window.supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function getPublicUrl(path) {
+      return db.storage.from("trades").getPublicUrl(path).data.publicUrl;
+    }
+
+    function escStr(str) {
+      const d = document.createElement("div");
+      d.appendChild(document.createTextNode(str || ""));
+      return d.innerHTML;
+    }
+
+    // ── Lightbox ──────────────────────────────────────────────
+    window.openTradeImage = function (url) {
+      document.getElementById("lightbox-img").src = url;
+      document.getElementById("lightbox").style.display = "flex";
+    };
+    function closeLightbox() { document.getElementById("lightbox").style.display = "none"; }
+    document.getElementById("lightbox-close").addEventListener("click",   closeLightbox);
+    document.getElementById("lightbox-overlay").addEventListener("click", closeLightbox);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeLightbox(); });
+
+    // ── Community Trades Slideshow ────────────────────────────
+    async function loadCommunityTrades() {
+      const loadingEl = document.getElementById("community-loading");
+      const emptyEl   = document.getElementById("community-empty");
+      const wrap      = document.getElementById("community-slideshow");
+
+      const { data, error } = await db
+        .from("community_trades")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
+
+      if (loadingEl) loadingEl.style.display = "none";
+
+      if (error || !data || !data.length) {
+        if (emptyEl) emptyEl.style.display = "flex";
+        return;
+      }
+
+      const track = document.getElementById("community-track");
+      track.innerHTML = data.map((t) => `
+        <div class="slide">
+          <div class="slide-img" onclick="openTradeImage('${getPublicUrl(t.image_path)}')">
+            <img src="${getPublicUrl(t.image_path)}" alt="${escStr(t.uploader_name)} trade" loading="lazy" />
+            <div class="slide-expand"><i class="fas fa-expand-alt"></i></div>
+          </div>
+          <div class="slide-info">
+            <div>
+              <p class="slide-name"><i class="fas fa-user"></i> ${escStr(t.uploader_name)}</p>
+              ${t.caption ? `<p class="slide-caption">${escStr(t.caption)}</p>` : ""}
+            </div>
+            <span class="slide-badge"><i class="fas fa-check"></i> Verified</span>
+          </div>
+        </div>
+      `).join("");
+
+      if (wrap) wrap.style.display = "block";
+      buildSlideshow(data.length);
+    }
+
+    // ── Slideshow Engine ──────────────────────────────────────
+    function buildSlideshow(count) {
+      const track = document.getElementById("community-track");
+      const dots  = document.getElementById("community-dots");
+      const prev  = document.getElementById("community-prev");
+      const next  = document.getElementById("community-next");
+      const wrap  = document.getElementById("community-slideshow");
+
+      if (count <= 1) {
+        if (prev) prev.style.display = "none";
+        if (next) next.style.display = "none";
+        return;
+      }
+
+      let current = 0;
+      let timer;
+
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement("button");
+        dot.className = "dot" + (i === 0 ? " active" : "");
+        dot.setAttribute("aria-label", `Slide ${i + 1}`);
+        dot.addEventListener("click", () => { goTo(i); resetTimer(); });
+        dots.appendChild(dot);
+      }
+
+      function goTo(idx) {
+        current = ((idx % count) + count) % count;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === current));
+      }
+
+      function startTimer() { timer = setInterval(() => goTo(current + 1), 5000); }
+      function resetTimer()  { clearInterval(timer); startTimer(); }
+
+      prev.addEventListener("click", () => { goTo(current - 1); resetTimer(); });
+      next.addEventListener("click", () => { goTo(current + 1); resetTimer(); });
+      wrap.addEventListener("mouseenter", () => clearInterval(timer));
+      wrap.addEventListener("mouseleave",  startTimer);
+
+      // Touch / swipe
+      let touchStartX = 0;
+      wrap.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      wrap.addEventListener("touchend",   (e) => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) { goTo(current + (diff > 0 ? 1 : -1)); resetTimer(); }
+      });
+
+      goTo(0);
+      startTimer();
+    }
+
+    // ── Featured Trades Grid ──────────────────────────────────
+    async function loadFeaturedTrades() {
+      const loadingEl = document.getElementById("featured-loading");
+      const emptyEl   = document.getElementById("featured-empty");
+      const grid      = document.getElementById("featured-trades-grid");
+
+      const { data, error } = await db
+        .from("featured_trades")
+        .select("*")
+        .order("display_order", { ascending: false });
+
+      if (loadingEl) loadingEl.style.display = "none";
+
+      if (error || !data || !data.length) {
+        if (emptyEl) emptyEl.style.display = "flex";
+        return;
+      }
+
+      grid.innerHTML = data.map((t) => {
+        const url = getPublicUrl(t.image_path);
+        return `
+          <div class="trade-card" onclick="openTradeImage('${url}')">
+            <div class="trade-card-img">
+              <img src="${url}" alt="${escStr(t.title)}" loading="lazy" />
+              <div class="trade-card-overlay"><i class="fas fa-expand-alt"></i></div>
+            </div>
+            <div class="trade-card-body">
+              <h3 class="trade-card-title">${escStr(t.title)}</h3>
+              ${t.description ? `<p class="trade-card-desc">${escStr(t.description)}</p>` : ""}
+            </div>
+          </div>`;
+      }).join("");
+
+      if (grid) grid.style.display = "grid";
+    }
+
+    loadCommunityTrades();
+    loadFeaturedTrades();
+  }
+
 });

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — JhayFx Academy</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+
+    <!-- ═══════════════════════════════════════════
+         LOGIN SCREEN
+    ════════════════════════════════════════════ -->
+    <div class="admin-login-screen" id="login-screen">
+      <div class="admin-login-card">
+        <div class="preloader-logo" style="margin: 0 auto 1.5rem">JF</div>
+        <h2 style="margin-bottom: 0.25rem">Admin Panel</h2>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.75rem">
+          Sign in to manage community trades
+        </p>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="admin@jhayfx.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="password-field">
+              <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password" />
+              <button type="button" class="toggle-password" id="toggle-pw" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-status" id="login-status"></div>
+          <button type="submit" class="hero-cta" style="width: 100%; justify-content: center" id="login-btn">
+            Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ADMIN DASHBOARD
+    ════════════════════════════════════════════ -->
+    <div class="admin-dashboard" id="dashboard" style="display: none">
+
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-logo">
+          <img src="logo.JPG" alt="JhayFx" class="logo"
+            onerror="this.onerror=null; this.src='https://placehold.co/44x44/007bff/fff?text=JF';" />
+          <span>JhayFx Admin</span>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="sidebar-btn active" data-tab="pending">
+            <i class="fas fa-clock"></i> Pending
+            <span class="badge" id="pending-badge">0</span>
+          </button>
+          <button class="sidebar-btn" data-tab="approved">
+            <i class="fas fa-check-circle"></i> Approved
+          </button>
+          <button class="sidebar-btn" data-tab="featured">
+            <i class="fas fa-star"></i> My Trades
+          </button>
+          <a href="index.html" class="sidebar-btn sidebar-link">
+            <i class="fas fa-home"></i> View Site
+          </a>
+        </nav>
+        <button class="sidebar-signout" id="signout-btn">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+
+        <!-- ── Pending Tab ── -->
+        <section class="admin-tab" id="tab-pending">
+          <div class="admin-tab-header">
+            <h2><i class="fas fa-clock"></i> Pending Submissions</h2>
+            <button class="refresh-btn" id="refresh-pending" aria-label="Refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+          <div class="admin-grid" id="pending-grid">
+            <div class="admin-loading"><i class="fas fa-spinner fa-spin"></i> Loading&hellip;</div>
+          </div>
+        </section>
+
+        <!-- ── Approved Tab ── -->
+        <section class="admin-tab" id="tab-approved" style="display: none">
+          <div class="admin-tab-header">
+            <h2><i class="fas fa-check-circle"></i> Approved Trades</h2>
+            <button class="refresh-btn" id="refresh-approved" aria-label="Refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+          <div class="admin-grid" id="approved-grid">
+            <div class="admin-loading"><i class="fas fa-spinner fa-spin"></i> Loading&hellip;</div>
+          </div>
+        </section>
+
+        <!-- ── My Trades Tab ── -->
+        <section class="admin-tab" id="tab-featured" style="display: none">
+          <div class="admin-tab-header">
+            <h2><i class="fas fa-star"></i> My Featured Trades</h2>
+          </div>
+
+          <!-- Upload form -->
+          <div class="featured-upload-card">
+            <h3 style="margin-bottom: 1.25rem; font-size: 1rem; color: var(--text-secondary)">
+              Add New Trade
+            </h3>
+            <form id="featured-form">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="feat-title">Title <span class="required">*</span></label>
+                  <input type="text" id="feat-title"
+                    placeholder="e.g. XAUUSD Long — 1:5 RR" required maxlength="100" />
+                </div>
+                <div class="form-group">
+                  <label for="feat-desc">Description</label>
+                  <input type="text" id="feat-desc"
+                    placeholder="Brief trade summary..." maxlength="200" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="file-drop-zone" id="feat-drop-zone">
+                  <input type="file" id="feat-screenshot" accept="image/*" required style="display:none" />
+                  <div class="drop-zone-inner" id="feat-drop-inner">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Upload Screenshot</p>
+                    <small>PNG, JPG — max 15 MB</small>
+                  </div>
+                  <div class="file-preview" id="feat-file-preview" style="display:none">
+                    <img id="feat-preview-img" src="" alt="Preview" />
+                    <button type="button" class="remove-file" id="feat-remove" aria-label="Remove">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-status" id="featured-status"></div>
+              <button type="submit" class="hero-cta" id="feat-submit-btn">
+                <i class="fas fa-plus"></i> Post Trade
+              </button>
+            </form>
+          </div>
+
+          <!-- Posted trades list -->
+          <div class="admin-tab-header" style="margin-top: 2.5rem">
+            <h3 style="font-size: 1rem; font-weight: 600">Posted Trades</h3>
+            <button class="refresh-btn" id="refresh-featured" aria-label="Refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+          <div class="admin-grid" id="featured-grid">
+            <div class="admin-loading"><i class="fas fa-spinner fa-spin"></i> Loading&hellip;</div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ── Lightbox ── -->
+    <div class="lightbox" id="lightbox" style="display: none" role="dialog" aria-modal="true">
+      <div class="lightbox-overlay" id="lightbox-overlay"></div>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="Trade screenshot" />
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
