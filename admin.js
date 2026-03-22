@@ -380,6 +380,7 @@ window.deleteFeatured = async function (id, encodedPath) {
    SIGNALS
 ══════════════════════════════════════════════════════════════════════ */
 let selectedDirection = "BUY";
+let editingSignalId   = null; // non-null when form is in edit mode
 
 document.getElementById("dir-buy").addEventListener("click", () => {
   selectedDirection = "BUY";
@@ -392,9 +393,80 @@ document.getElementById("dir-sell").addEventListener("click", () => {
   document.getElementById("dir-buy").classList.remove("active");
 });
 
+/* ── Cancel edit ── */
+document.getElementById("sig-cancel-btn").addEventListener("click", resetSignalForm);
+
+function resetSignalForm() {
+  editingSignalId = null;
+
+  // Clear all fields
+  document.getElementById("signal-form").reset();
+  document.getElementById("sig-tp1").value = "";
+  document.getElementById("sig-tp2").value = "";
+
+  // Reset direction to BUY
+  selectedDirection = "BUY";
+  document.getElementById("dir-buy").classList.add("active");
+  document.getElementById("dir-sell").classList.remove("active");
+
+  // Hide edit-mode UI
+  document.getElementById("sig-edit-banner").style.display   = "none";
+  document.getElementById("sig-status-group").style.display  = "none";
+  document.getElementById("sig-cancel-btn").style.display    = "none";
+  document.getElementById("sig-form-card").classList.remove("sig-edit-mode");
+
+  // Restore submit button label and form title
+  document.getElementById("sig-submit-btn").innerHTML =
+    '<i class="fas fa-broadcast-tower"></i> Post Signal';
+  document.getElementById("sig-form-title").textContent = "Post New Signal";
+
+  setSigStatus("", "");
+}
+
+/* ── Populate form for editing ── */
+window.editSignal = function (s) {
+  editingSignalId = s.id;
+
+  // Populate text fields
+  document.getElementById("sig-pair").value  = s.pair;
+  document.getElementById("sig-entry").value = s.entry;
+  document.getElementById("sig-sl").value    = s.stop_loss;
+  document.getElementById("sig-note").value  = s.note || "";
+
+  // Split pipe-separated TPs
+  const tpParts = (s.take_profit || "").split("|");
+  document.getElementById("sig-tp1").value = tpParts[0] || "";
+  document.getElementById("sig-tp2").value = tpParts[1] || "";
+
+  // Set direction toggle
+  selectedDirection = s.direction === "SELL" ? "SELL" : "BUY";
+  document.getElementById("dir-buy").classList.toggle("active",  selectedDirection === "BUY");
+  document.getElementById("dir-sell").classList.toggle("active", selectedDirection === "SELL");
+
+  // Set status select
+  document.getElementById("sig-status-select").value = s.status || "active";
+
+  // Show edit-mode UI
+  document.getElementById("sig-edit-pair-label").textContent = s.pair;
+  document.getElementById("sig-edit-banner").style.display   = "flex";
+  document.getElementById("sig-status-group").style.display  = "block";
+  document.getElementById("sig-cancel-btn").style.display    = "flex";
+  document.getElementById("sig-form-card").classList.add("sig-edit-mode");
+
+  document.getElementById("sig-submit-btn").innerHTML =
+    '<i class="fas fa-save"></i> Update Signal';
+  document.getElementById("sig-form-title").textContent = "Edit Signal";
+
+  setSigStatus("", "");
+
+  // Scroll form into view
+  document.getElementById("signal-form-card").scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+/* ── Form submit: INSERT or UPDATE ── */
 document.getElementById("signal-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const btn  = document.getElementById("sig-submit-btn");
+  const btn   = document.getElementById("sig-submit-btn");
   const pair  = document.getElementById("sig-pair").value.trim().toUpperCase();
   const entry = document.getElementById("sig-entry").value.trim();
   const sl    = document.getElementById("sig-sl").value.trim();
@@ -402,50 +474,73 @@ document.getElementById("signal-form").addEventListener("submit", async (e) => {
   const tp2   = document.getElementById("sig-tp2").value.trim();
   const note  = document.getElementById("sig-note").value.trim();
 
-  // Combine non-empty TPs into one comma-separated string
-  const tp = [tp1, tp2].filter(Boolean).join(", ");
+  // Combine non-empty TPs into one pipe-separated string
+  const tp = [tp1, tp2].filter(Boolean).join("|");
 
   if (!pair || !entry || !sl || !tp1) {
     setSigStatus("Please fill in all required fields.", "error");
     return;
   }
 
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting\u2026';
+  const isEditing = editingSignalId !== null;
+
+  btn.disabled  = true;
+  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${isEditing ? "Saving\u2026" : "Posting\u2026"}`;
   setSigStatus("", "");
 
-  const { error } = await db.from("signals").insert({
-    pair,
-    direction:   selectedDirection,
-    entry,
-    stop_loss:   sl,
-    take_profit: tp,
-    note:        note || null,
-    status:      "active",
-  });
+  if (isEditing) {
+    /* ── UPDATE existing signal ── */
+    const statusVal = document.getElementById("sig-status-select").value;
 
-  if (error) {
-    setSigStatus("Error: " + error.message, "error");
+    const { error } = await db.from("signals").update({
+      pair,
+      direction:   selectedDirection,
+      entry,
+      stop_loss:   sl,
+      take_profit: tp,
+      note:        note || null,
+      status:      statusVal,
+    }).eq("id", editingSignalId);
+
+    if (error) {
+      setSigStatus("Error: " + error.message, "error");
+      btn.disabled  = false;
+      btn.innerHTML = '<i class="fas fa-save"></i> Update Signal';
+    } else {
+      setSigStatus("Signal updated!", "success");
+      resetSignalForm();
+      loadSignals();
+    }
   } else {
-    setSigStatus("Signal posted!", "success");
-    // Push notification to all subscribers
-    db.functions.invoke("send-push", {
-      body: {
-        title: `📊 New Signal: ${pair} ${selectedDirection}`,
-        message: `Entry: ${entry} | SL: ${sl} | TP: ${tp1}${tp2 ? " / " + tp2 : ""}${note ? " — " + note : ""}`,
-        url: "signals.html",
-      },
-    }).catch(() => {});
-    document.getElementById("signal-form").reset();
-    ["sig-tp1","sig-tp2"].forEach((id) => { document.getElementById(id).value = ""; });
-    selectedDirection = "BUY";
-    document.getElementById("dir-buy").classList.add("active");
-    document.getElementById("dir-sell").classList.remove("active");
-    loadSignals();
-  }
+    /* ── INSERT new signal ── */
+    const { error } = await db.from("signals").insert({
+      pair,
+      direction:   selectedDirection,
+      entry,
+      stop_loss:   sl,
+      take_profit: tp,
+      note:        note || null,
+      status:      "active",
+    });
 
-  btn.disabled  = false;
-  btn.innerHTML = '<i class="fas fa-broadcast-tower"></i> Post Signal';
+    if (error) {
+      setSigStatus("Error: " + error.message, "error");
+      btn.disabled  = false;
+      btn.innerHTML = '<i class="fas fa-broadcast-tower"></i> Post Signal';
+    } else {
+      setSigStatus("Signal posted!", "success");
+      // Push notification to all subscribers
+      db.functions.invoke("send-push", {
+        body: {
+          title:   `📊 New Signal: ${pair} ${selectedDirection}`,
+          message: `Entry: ${entry} | SL: ${sl} | TP: ${tp1}${tp2 ? " / " + tp2 : ""}${note ? " — " + note : ""}`,
+          url:     "signals.html",
+        },
+      }).catch(() => {});
+      resetSignalForm(); // also restores button label
+      loadSignals();
+    }
+  }
 });
 
 function setSigStatus(msg, type) {
@@ -472,7 +567,10 @@ async function loadSignals() {
 
   const statusLabels = { active: "Active", tp_hit: "TP Hit", sl_hit: "SL Hit", closed: "Closed" };
 
-  list.innerHTML = data.map((s) => `
+  list.innerHTML = data.map((s) => {
+    // Serialize signal data as a JSON attribute for safe retrieval in editSignal()
+    const encoded = encodeURIComponent(JSON.stringify(s));
+    return `
     <div class="admin-signal-row" id="sig-row-${s.id}">
       <div class="admin-signal-info">
         <span class="signal-pair">${esc(s.pair)}</span>
@@ -490,12 +588,15 @@ async function loadSignals() {
           <button class="action-btn reject-btn"  onclick="updateSignal('${s.id}','sl_hit')">SL Hit</button>
           <button class="action-btn"             onclick="updateSignal('${s.id}','closed')" style="background:rgba(255,255,255,0.05);color:var(--text-secondary);border:1px solid var(--border-color)">Close</button>
         ` : `<span class="admin-sig-status-badge">${statusLabels[s.status] || s.status}</span>`}
+        <button class="action-btn edit-btn" onclick="editSignal(JSON.parse(decodeURIComponent('${encoded}')))">
+          <i class="fas fa-pen"></i>
+        </button>
         <button class="action-btn delete-btn" onclick="deleteSignal('${s.id}')">
           <i class="fas fa-trash"></i>
         </button>
       </div>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
 }
 
 window.updateSignal = async function (id, status) {
