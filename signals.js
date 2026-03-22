@@ -17,9 +17,12 @@ if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
       serviceWorkerParam: { scope: "./" },
     });
     // Auto-prompt after 3 seconds regardless of bell button
+    console.log("[OneSignal] initialized, optedIn:", OneSignal.User.PushSubscription.optedIn);
     setTimeout(() => {
-      if (!OneSignal.User.PushSubscription.optedIn) {
-        OneSignal.Slidedown.promptPush();
+      const optedIn = OneSignal.User.PushSubscription.optedIn;
+      console.log("[OneSignal] auto-prompt check, optedIn:", optedIn);
+      if (!optedIn) {
+        OneSignal.Slidedown.promptPush({ force: true });
       }
     }, 3000);
 
