@@ -4,7 +4,7 @@
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // ── Offline cache ──────────────────────────────────────────
-const CACHE_NAME = "jhayfx-v2";
+const CACHE_NAME = "jhayfx-v3";
 const PRECACHE = [
   "./",
   "./index.html",
