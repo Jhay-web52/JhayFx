@@ -131,7 +131,7 @@ document.querySelectorAll(".filter-btn").forEach((btn) => {
 
 /* ── TP levels builder ────────────────────────────────────────────── */
 function buildTpLevels(tpStr) {
-  const tps = (tpStr || "").split(",").map((t) => t.trim()).filter(Boolean);
+  const tps = (tpStr || "").split("|").map((t) => t.trim()).filter(Boolean);
   return tps.map((val, i) => `
     <div class="signal-level">
       <span class="level-label">TP ${tps.length > 1 ? i + 1 : ""}</span>
