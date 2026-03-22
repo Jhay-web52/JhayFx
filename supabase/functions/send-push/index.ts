@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const ONESIGNAL_APP_ID = "323e0c7a-84d0-4592-b318-fc285ebf34dd";
+const ONESIGNAL_APP_ID = "4de377e6-66d9-4caf-a77b-41bbdaa67248";
 const ONESIGNAL_API   = "https://onesignal.com/api/v1/notifications";
 
 const corsHeaders = {

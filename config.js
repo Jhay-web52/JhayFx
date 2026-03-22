@@ -8,5 +8,5 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // 1. Create a free account at onesignal.com
 // 2. Create a Web App → get your App ID
 // 3. Paste it below
-const ONESIGNAL_APP_ID    = "323e0c7a-84d0-4592-b318-fc285ebf34dd";
+const ONESIGNAL_APP_ID    = "4de377e6-66d9-4caf-a77b-41bbdaa67248";
 const ONESIGNAL_SAFARI_ID = "web.onesignal.auto.1774e9e6-150a-4896-aace-e43262a3e2ec";
