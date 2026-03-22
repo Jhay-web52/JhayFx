@@ -19,14 +19,24 @@ if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
     // Bell button
     const bellBtn = document.getElementById("push-bell-btn");
     if (bellBtn) {
+      // Set initial state on load
+      function updateBellState(optedIn) {
+        if (optedIn) {
+          bellBtn.innerHTML = '<i class="fas fa-bell"></i> Alerts On';
+          bellBtn.classList.add("bell-on");
+        } else {
+          bellBtn.innerHTML = '<i class="fas fa-bell"></i> Get Signal Alerts';
+          bellBtn.classList.remove("bell-on");
+        }
+      }
+      updateBellState(OneSignal.User.PushSubscription.optedIn);
+
       bellBtn.addEventListener("click", () => {
+        if (OneSignal.User.PushSubscription.optedIn) return;
         OneSignal.Slidedown.promptPush();
       });
       OneSignal.User.PushSubscription.addEventListener("change", (e) => {
-        if (e.current.optedIn) {
-          bellBtn.innerHTML = '<i class="fas fa-bell"></i> Alerts On';
-          bellBtn.classList.add("bell-on");
-        }
+        updateBellState(e.current.optedIn);
       });
     }
   });
