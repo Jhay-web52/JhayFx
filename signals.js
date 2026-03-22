@@ -24,9 +24,11 @@ if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
         if (optedIn) {
           bellBtn.innerHTML = '<i class="fas fa-bell"></i> Alerts On';
           bellBtn.classList.add("bell-on");
+          bellBtn.classList.remove("bell-pulse"); // stop pulsing once subscribed
         } else {
           bellBtn.innerHTML = '<i class="fas fa-bell"></i> Get Signal Alerts';
           bellBtn.classList.remove("bell-on");
+          bellBtn.classList.add("bell-pulse");
         }
       }
       updateBellState(OneSignal.User.PushSubscription.optedIn);
@@ -38,6 +40,13 @@ if (typeof ONESIGNAL_APP_ID !== "undefined" && ONESIGNAL_APP_ID) {
       OneSignal.User.PushSubscription.addEventListener("change", (e) => {
         updateBellState(e.current.optedIn);
       });
+
+      // Auto-prompt after 3 seconds if the user hasn't subscribed yet
+      setTimeout(() => {
+        if (!OneSignal.User.PushSubscription.optedIn) {
+          OneSignal.Slidedown.promptPush();
+        }
+      }, 3000);
     }
   });
 }
