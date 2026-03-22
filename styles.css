@@ -2168,15 +2168,15 @@ a   { text-decoration: none; }
 
 /* Levels */
 .signal-levels {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   background: var(--bg-medium);
   border-radius: 0.6rem;
   padding: 0.85rem 0.75rem;
   margin-bottom: 0.85rem;
 }
-.signal-level { display: flex; flex-direction: column; gap: 0.2rem; }
+.signal-level { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .level-label  { font-size: 0.68rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
 .level-value  { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); font-family: "Courier New", monospace; }
 .sl-value     { color: var(--danger); }
@@ -2359,9 +2359,6 @@ a   { text-decoration: none; }
   }
   .signal-card-header { flex-wrap: wrap; gap: 0.4rem; }
   .signal-pair-wrap   { flex-wrap: wrap; }
-  .signal-levels {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   /* Admin signals list rows */
   .admin-signal-row {
@@ -2378,9 +2375,6 @@ a   { text-decoration: none; }
 @media (max-width: 479px) {
   /* Pricing — tighten padding for smaller screens */
   .pricing-card { padding: 1.5rem 1.25rem 1.25rem; }
-
-  /* Signal card levels to single column on very narrow */
-  .signal-levels { grid-template-columns: repeat(2, 1fr); }
 
   /* Slideshow nav buttons smaller */
   .slideshow-btn { width: 28px; height: 28px; font-size: 0.65rem; }
@@ -2405,9 +2399,6 @@ a   { text-decoration: none; }
   .hero-title    { font-size: 1.65rem; }
   .pricing-card  { padding: 1.25rem 1rem 1rem; }
   .stats-item .stat-number { font-size: 2rem; }
-
-  /* Signal levels: 1 column on truly tiny screens */
-  .signal-levels { grid-template-columns: 1fr 1fr; }
 
   /* Ticker */
   .ticker-bar    { height: 28px; }
